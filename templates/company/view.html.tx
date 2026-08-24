@@ -8,15 +8,20 @@
 
     % include '/includes/company/tabs_start.tx' { active => 'company-overview-tab' };
 
-    <dl>
+    <div class="grid-row">
     % if $company.company_number == $c.authorised_company and $company.registered_office_is_in_dispute {
+        <dl class="column-full">
               <dt> <span id="roa-dispute" ><% l('Registered office address replaced') %></span> <a id="dispute-help-link"  href="/help/replaced-address-help.html"><% l("what's this?") %></a></dt>
               <dd class="text data">
               % $c.address_as_string( $company.registered_office_address, { suppress_double_commas => 1, include_care_of => 1, include_po_box => 1, title_case_care_of => 1 } );
               </dd>
+        </dl>
     % } else if $company.company_number == $c.authorised_company and $company.undeliverable_registered_office_address {
+        <dl class="column-full">
                 <dt id="roa-undeliverable" ><% l('Undeliverable registered office address') %> <a href="/help/registered-office-address-undeliverable.html"><% l("what's this") %>?</a></dt>
-    % } else if $company.type != "charitable-incorporated-organisation" && $company.type != "scottish-charitable-incorporated-organisation" {
+        </dl>
+    % } else if $company.type != "charitable-incorporated-organisation" && $company.type != "scottish-charitable-incorporated-organisation" && !($company.type == "limited-partnership" && ($company.registered_office_address.size() == 0 || !$company.registered_office_address)) {
+        <dl class="column-full">
             % given $company.type {
             %   when "uk-establishment" {
                   <dt><% l('UK establishment office address') %></dt>
@@ -70,8 +75,10 @@
                 % }
             % }
             </dd>
+        </dl>
     % }
-    </dl>
+    </div>
+
 
     % if ($company.type == 'limited-partnership' && $company.service_address) {
         <div class="grid-row">
